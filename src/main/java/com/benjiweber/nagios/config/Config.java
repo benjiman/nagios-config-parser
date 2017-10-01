@@ -21,6 +21,11 @@ public class Config {
 
         ParseTree tree = parser.config();
         
+        if (parser.getNumberOfSyntaxErrors() > 0) {
+            System.err.println("Failed to parse with " + parser.getNumberOfSyntaxErrors() + " errors");
+            System.exit(parser.getNumberOfSyntaxErrors());
+        }
+
         System.out.println(tree.toStringTree(parser)); 
     }
 
