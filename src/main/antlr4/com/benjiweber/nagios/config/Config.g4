@@ -8,7 +8,7 @@ key   : VALID_NAGIOS_IDENTIFIER;
 value : (VALID_NAGIOS_IDENTIFIER | VALID_NAGIOS_VALUE )+ ;
 
 VALID_NAGIOS_IDENTIFIER  :  [a-zA-Z_0-9]+ ;
-VALID_NAGIOS_VALUE : [a-zA-Z_0-9!:/\-.,'"()*#{}]+ ;
+VALID_NAGIOS_VALUE : [a-zA-Z_0-9!:/\-=$&\[\].,'"()*#{}]+ ;
 NEWLINE : [\n\r]+ ;
 WS  :   [ \t]+ -> skip;
 COMMENT : '#'~[\n]+ -> skip;
