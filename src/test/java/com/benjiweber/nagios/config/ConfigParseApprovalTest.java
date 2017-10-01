@@ -43,6 +43,18 @@ public class ConfigParseApprovalTest {
         );
     }
 
+    @Test public void comment_char_in_value() throws IOException {
+        assertParse(
+                "    define service {\n" +
+                        "        use                             some-base-definition\n" +
+                        "        service_description             Blah Blah blah blah - http://example.com/blah#fragment\n" +
+                        "    }\n",
+
+                "(config (define define (type service) { \\n (key use) (value some-base-definition) \\n (key service_description) (value Blah Blah blah blah - http://example.com/blah#fragment) \\n }) \\n)"
+        );
+    }
+
+
     @Test public void skips_comments() throws IOException {
         assertParse(
                 "define ab {\n" +
@@ -55,7 +67,18 @@ public class ConfigParseApprovalTest {
                         "\two rld\n" +
                         "}",
 
-                "(config (define define (type ab) { \\n (key he) (value lo) \\n }) \\n\\n (define define (type ab) { \\n (key he) (value lo) \\n (key wo) (value rld) \\n }))"
+                "(config (define define (type ab) { \\n (key he) (value lo) \\n \\n }) \\n\\n (define define (type ab) { \\n (key he) (value lo) \\n (key wo) (value rld) \\n }))"
+        );
+    }
+
+    @Test public void skips_midline_comments() throws IOException {
+        assertParse(
+                "define ab {\n" +
+                        "        he lo\n" +
+                        "\two r;ld\n" +
+                        "}",
+
+                "(config (define define (type ab) { \\n (key he) (value lo) \\n (key wo) (value r) \\n }))"
         );
     }
 
