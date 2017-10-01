@@ -4,23 +4,24 @@ import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
+import java.io.FileInputStream;
+
 public class Config {
     public static void main(String... args) throws Exception {
-        // create a CharStream that reads from standard input
-        ANTLRInputStream input = new ANTLRInputStream(System.in);
 
-        // create a lexer that feeds off of input CharStream
+        String filename = args[0];
+        
+        ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(filename));
+
         ConfigLexer lexer = new ConfigLexer(input);
 
-        // create a buffer of tokens pulled from the lexer
         CommonTokenStream tokens = new CommonTokenStream(lexer);
-
-
-        // create a parser that feeds off the tokens buffer
+        
         ConfigParser parser = new ConfigParser(tokens);
 
-        ParseTree tree = parser.config(); // begin parsing at init rule
-        System.out.println(tree.toStringTree(parser)); // print LISP-style tree
+        ParseTree tree = parser.config();
+        
+        System.out.println(tree.toStringTree(parser)); 
     }
 
 }
