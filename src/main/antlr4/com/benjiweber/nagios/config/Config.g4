@@ -1,7 +1,7 @@
 grammar Config;
 
 config  : (define | NEWLINE)* ;
-define  : 'define' type '{' NEWLINE (key value NEWLINE)* '}' ;
+define  : 'define' type '{' NEWLINE (key value NEWLINE+)* '}' ;
 
 type  : VALID_NAGIOS_IDENTIFIER;
 key   : VALID_NAGIOS_IDENTIFIER;
