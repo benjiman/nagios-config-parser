@@ -1,6 +1,7 @@
 lexer grammar ConfigTokens;
 
-COMMENT : '#'+~[\n]+ -> skip;
+EMPTY_COMMENT : '#\n' -> skip;
+COMMENT : '#'~[\n]+'\n' -> skip;
 
 DEFINE : 'define' ;
 OPEN_BLOCK : '{' -> pushMode(BLOCK_MODE) ;
@@ -11,7 +12,7 @@ MID_LINE_COMMENT : ';'~[\n]+ -> skip;
 
 mode BLOCK_MODE;
 BLOCK_CLOSE_BLOCK : '}' -> popMode ;
-BLOCK_COMMENT : '#'+~[\n]+ -> skip;
+BLOCK_COMMENT : '#'~[\n]+ -> skip;
 BLOCK_VALID_NAGIOS_IDENTIFIER  :  [a-zA-Z_0-9]+ ;
 BLOCK_VALID_NAGIOS_VALUE : [a-zA-Z_0-9!:/\-=$&\[\].,'"()@|*%#^{}]+ ;
 BLOCK_NEWLINE : [\n\r]+ ;

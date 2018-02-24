@@ -57,6 +57,28 @@ public class ConfigParseApprovalTest {
     }
 
 
+    @Test public void skips_block_singleline_comments() throws IOException {
+        assertParse(
+                "#######\n" +
+                "#\n" +
+                "# this is a comment\n" +
+                "#\n" +
+                "#######\n" +
+                        "define ab {\n" +
+                        "        he lo\n" +
+                        "#\two rld\n" +
+                        "}\n" +
+                        "\n" +
+                        "define ab {\n" +
+                        "   he lo\n" +
+                        "\two rld\n" +
+                        "}",
+
+                "(config (define define (type ab) { \\n (key he) (value lo) \\n \\n }) \\n\\n (define define (type ab) { \\n (key he) (value lo) \\n (key wo) (value rld) \\n }))"
+        );
+    }
+
+
     @Test public void skips_comments() throws IOException {
         assertParse(
                 "define ab {\n" +
