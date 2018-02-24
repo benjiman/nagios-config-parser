@@ -3,6 +3,7 @@ package com.benjiweber.nagios.config;
 import com.benjiweber.nagios.config.model.Define;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.ConsoleErrorListener;
 import org.antlr.v4.runtime.tree.*;
 import src.main.antlr4.com.benjiweber.nagios.config.Config;
 import src.main.antlr4.com.benjiweber.nagios.lexer.ConfigTokens;
@@ -18,6 +19,7 @@ import java.util.stream.Stream;
 import static java.util.stream.Collectors.toList;
 
 public class NagiosConfig {
+    
     public static void main(String... args) throws Exception {
 
         System.out.println(
@@ -63,10 +65,12 @@ public class NagiosConfig {
 
     public static List<Define> parse(ANTLRInputStream input) throws InvalidNagiosConfigException {
         ConfigTokens lexer = new ConfigTokens(input);
+        lexer.removeErrorListeners();
 
         CommonTokenStream tokens = new CommonTokenStream(lexer);
 
         Config parser = new Config(tokens);
+        parser.removeErrorListeners();
 
         ParseTree tree = parser.config();
 

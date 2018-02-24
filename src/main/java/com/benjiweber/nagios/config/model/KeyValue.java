@@ -7,14 +7,14 @@ import static java.util.stream.Collectors.joining;
 
 public class KeyValue {
     private final String key;
-    private final String value;
+    private final Value value;
 
     public KeyValue(String key, String value) {
         this.key = key;
-        this.value = value;
+        this.value = Value.parse(key, value);
     }
 
-    public String value() { return value; }
+    public Value value() { return value; }
     public String key() { return key; }
 
     @Override

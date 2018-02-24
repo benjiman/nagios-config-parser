@@ -3,19 +3,13 @@ package com.benjiweber.nagios.config;
 import com.benjiweber.nagios.config.model.Define;
 import com.benjiweber.nagios.config.model.DefineType;
 import com.benjiweber.nagios.config.model.KeyValue;
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.tree.*;
+import org.antlr.v4.runtime.tree.ParseTree;
 import src.main.antlr4.com.benjiweber.nagios.config.Config;
 import src.main.antlr4.com.benjiweber.nagios.config.ConfigBaseVisitor;
-import src.main.antlr4.com.benjiweber.nagios.config.ConfigListener;
-import src.main.antlr4.com.benjiweber.nagios.config.ConfigVisitor;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
 
@@ -32,7 +26,10 @@ public class BuildJavaConfig extends ConfigBaseVisitor<Stream<Define>> {
     }
 
     private KeyValue toKeyValue(Config.KeyvalueContext ctx) {
-        return new KeyValue(ctx.key().getText(), ctx.value().getText());
+        return new KeyValue(
+            ctx.key().getText(),
+            ctx.value().children.stream().map(ParseTree::getText).collect(joining(" "))
+        );
     }
 
     @Override

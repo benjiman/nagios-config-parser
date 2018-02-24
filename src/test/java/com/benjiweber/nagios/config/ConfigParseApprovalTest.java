@@ -31,6 +31,22 @@ public class ConfigParseApprovalTest {
         );
     }
 
+    @Test public void spaces_in_descriptions() throws IOException {
+        assertParse(
+                "define ab {\n" +
+                        "        he lo lo lo\n" +
+                        "\two rld\n" +
+                        "}\n" +
+                        "\n" +
+                        "define ab {\n" +
+                        "   he lo\n" +
+                        "\two rld\n" +
+                        "}",
+
+                "(config (define define (type ab) { \\n (keyvalue (key he) (value lo lo lo)) \\n (keyvalue (key wo) (value rld)) \\n }) \\n\\n (define define (type ab) { \\n (keyvalue (key he) (value lo)) \\n (keyvalue (key wo) (value rld)) \\n }))"
+        );
+    }
+
     @Test public void special_characters_in_values() throws IOException {
         assertParse(
                 "    define service {\n" +

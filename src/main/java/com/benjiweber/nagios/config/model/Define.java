@@ -9,6 +9,14 @@ public class Define {
     private final DefineType type;
     private final List<KeyValue> config;
 
+    public DefineType type() {
+        return type;
+    }
+
+    public List<KeyValue> config() {
+        return config;
+    }
+
     public Define(DefineType type, List<KeyValue> config) {
         this.type = type;
         this.config = config;

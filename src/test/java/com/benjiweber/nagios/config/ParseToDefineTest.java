@@ -33,4 +33,17 @@ public class ParseToDefineTest {
                 )
         );
     }
+
+    @Test
+    public void should_retain_spaces_in_descriptions() throws InvalidNagiosConfigException {
+        assertEquals(
+                NagiosConfig.parse("define service {\n" +
+                        "        he lo there bar\n" +
+                        "\two rld\n" +
+                        "}"),
+                asList(
+                        new Define(service, asList(new KeyValue("he", "lo there bar"), new KeyValue("wo", "rld")))
+                )
+        );
+    }
 }
