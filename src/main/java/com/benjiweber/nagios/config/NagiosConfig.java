@@ -2,7 +2,7 @@ package com.benjiweber.nagios.config;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.*;
 import src.main.antlr4.com.benjiweber.nagios.config.Config;
 import src.main.antlr4.com.benjiweber.nagios.lexer.ConfigTokens;
 
@@ -22,7 +22,7 @@ public class NagiosConfig {
         Config parser = new Config(tokens);
 
         ParseTree tree = parser.config();
-        
+
         if (parser.getNumberOfSyntaxErrors() > 0) {
             System.err.println("Failed to parse with " + parser.getNumberOfSyntaxErrors() + " errors");
             System.exit(parser.getNumberOfSyntaxErrors());

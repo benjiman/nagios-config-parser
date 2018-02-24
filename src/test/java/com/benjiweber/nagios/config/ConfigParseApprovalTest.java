@@ -27,7 +27,7 @@ public class ConfigParseApprovalTest {
             "\two rld\n" +
             "}",
 
-            "(config (define define (type ab) { \\n (key he) (value lo) \\n (key wo) (value rld) \\n }) \\n\\n (define define (type ab) { \\n (key he) (value lo) \\n (key wo) (value rld) \\n }))"
+            "(config (define define (type ab) { \\n (keyvalue (key he) (value lo)) \\n (keyvalue (key wo) (value rld)) \\n }) \\n\\n (define define (type ab) { \\n (keyvalue (key he) (value lo)) \\n (keyvalue (key wo) (value rld)) \\n }))"
         );
     }
 
@@ -41,7 +41,7 @@ public class ConfigParseApprovalTest {
                         "        check_command                   checkCommandName!\"blah(blah(blah(a.b.c-d*_example.com.{p99,m1_rate},2,'multiplySeries')),sumSeries(a.b.abc-eu*_example_com.com.example.a.b.a-b-time.m1_rate))\"!200!250!3\n" +
                         "    }\n",
 
-                "(config (define define (type service) { \\n (key use) (value some-base-definition) \\n (key service_description) (value Blah Blah blah blah - http://example.com/blah) \\n (key host_name) (value a-host-name) \\n (key service_groups) (value a-service-group) \\n (key check_command) (value checkCommandName!\"blah(blah(blah(a.b.c-d*_example.com.{p99,m1_rate},2,'multiplySeries')),sumSeries(a.b.abc-eu*_example_com.com.example.a.b.a-b-time.m1_rate))\"!200!250!3) \\n }) \\n)"
+                "(config (define define (type service) { \\n (keyvalue (key use) (value some-base-definition)) \\n (keyvalue (key service_description) (value Blah Blah blah blah - http://example.com/blah)) \\n (keyvalue (key host_name) (value a-host-name)) \\n (keyvalue (key service_groups) (value a-service-group)) \\n (keyvalue (key check_command) (value checkCommandName!\"blah(blah(blah(a.b.c-d*_example.com.{p99,m1_rate},2,'multiplySeries')),sumSeries(a.b.abc-eu*_example_com.com.example.a.b.a-b-time.m1_rate))\"!200!250!3)) \\n }) \\n)"
         );
     }
 
@@ -52,7 +52,7 @@ public class ConfigParseApprovalTest {
                         "        service_description             Blah Blah blah blah - http://example.com/blah#fragment\n" +
                         "    }\n",
 
-                "(config (define define (type service) { \\n (key use) (value some-base-definition) \\n (key service_description) (value Blah Blah blah blah - http://example.com/blah#fragment) \\n }) \\n)"
+                "(config (define define (type service) { \\n (keyvalue (key use) (value some-base-definition)) \\n (keyvalue (key service_description) (value Blah Blah blah blah - http://example.com/blah#fragment)) \\n }) \\n)"
         );
     }
 
@@ -63,7 +63,7 @@ public class ConfigParseApprovalTest {
                         "        blah             \n" +
                         "    }\n",
 
-                "(config (define define (type xyz) { \\n (key bleh) (value foo) \\n (key blah) \\n }) \\n)"
+                "(config (define define (type xyz) { \\n (keyvalue (key bleh) (value foo)) \\n (keyvalue (key blah)) \\n }) \\n)"
         );
     }
 
@@ -86,7 +86,7 @@ public class ConfigParseApprovalTest {
                         "\two rld\n" +
                         "}",
 
-                "(config (define define (type ab) { \\n (key he) (value lo) \\n \\n }) \\n\\n (define define (type ab) { \\n (key he) (value lo) \\n (key wo) (value rld) \\n }))"
+                "(config (define define (type ab) { \\n (keyvalue (key he) (value lo)) \\n \\n }) \\n\\n (define define (type ab) { \\n (keyvalue (key he) (value lo)) \\n (keyvalue (key wo) (value rld)) \\n }))"
         );
     }
 
@@ -103,7 +103,7 @@ public class ConfigParseApprovalTest {
                         "\two rld\n" +
                         "}",
 
-                "(config (define define (type ab) { \\n (key he) (value lo) \\n \\n }) \\n\\n (define define (type ab) { \\n (key he) (value lo) \\n (key wo) (value rld) \\n }))"
+                "(config (define define (type ab) { \\n (keyvalue (key he) (value lo)) \\n \\n }) \\n\\n (define define (type ab) { \\n (keyvalue (key he) (value lo)) \\n (keyvalue (key wo) (value rld)) \\n }))"
         );
     }
 
@@ -119,7 +119,7 @@ public class ConfigParseApprovalTest {
                         "\two rld >> /dev/null\n" +
                         "}",
 
-                "(config (define define (type ab) { \\n (key he) (value lo) \\n \\n }) \\n\\n (define define (type ab) { \\n (key he) (value lo) \\n (key wo) (value rld >> /dev/null) \\n }))"
+                "(config (define define (type ab) { \\n (keyvalue (key he) (value lo)) \\n \\n }) \\n\\n (define define (type ab) { \\n (keyvalue (key he) (value lo)) \\n (keyvalue (key wo) (value rld >> /dev/null)) \\n }))"
         );
     }
 
@@ -135,7 +135,7 @@ public class ConfigParseApprovalTest {
                         "\two rld\\d+a?\n" +
                         "}",
 
-                "(config (define define (type ab) { \\n (key he) (value lo) \\n \\n }) \\n\\n (define define (type ab) { \\n (key he) (value lo) \\n (key wo) (value rld\\d+a?) \\n }))"
+                "(config (define define (type ab) { \\n (keyvalue (key he) (value lo)) \\n \\n }) \\n\\n (define define (type ab) { \\n (keyvalue (key he) (value lo)) \\n (keyvalue (key wo) (value rld\\d+a?)) \\n }))"
         );
     }
 
@@ -147,7 +147,7 @@ public class ConfigParseApprovalTest {
                         "\two r;ld\n" +
                         "}",
 
-                "(config (define define (type ab) { \\n (key he) (value lo) \\n (key wo) (value r) \\n }))"
+                "(config (define define (type ab) { \\n (keyvalue (key he) (value lo)) \\n (keyvalue (key wo) (value r)) \\n }))"
         );
     }
 
@@ -158,7 +158,7 @@ public class ConfigParseApprovalTest {
                         "\two r\n" +
                         "}",
 
-                "(config (define define (type ab) { \\n (key he) (value lo) \\n (key wo) (value r) \\n }))"
+                "(config (define define (type ab) { \\n (keyvalue (key he) (value lo)) \\n (keyvalue (key wo) (value r)) \\n }))"
         );
     }
 
