@@ -111,6 +111,23 @@ public class ConfigParseApprovalTest {
         );
     }
 
+    @Test public void handles_some_regex_chars() throws IOException {
+        assertParse(
+                "define ab {\n" +
+                        "        he lo\n" +
+                        "#\two rld\n" +
+                        "}\n" +
+                        "\n" +
+                        "define ab {\n" +
+                        "   he lo\n" +
+                        "\two rld\\d+a?\n" +
+                        "}",
+
+                "(config (define define (type ab) { \\n (key he) (value lo) \\n \\n }) \\n\\n (define define (type ab) { \\n (key he) (value lo) \\n (key wo) (value rld\\d+a?) \\n }))"
+        );
+    }
+
+
     @Test public void skips_midline_comments() throws IOException {
         assertParse(
                 "define ab {\n" +
