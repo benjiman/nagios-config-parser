@@ -14,7 +14,7 @@ mode BLOCK_MODE;
 BLOCK_CLOSE_BLOCK : '}' -> popMode ;
 BLOCK_COMMENT : '#'~[\n]+ -> skip;
 BLOCK_VALID_NAGIOS_IDENTIFIER  :  [a-zA-Z_0-9]+ ;
-BLOCK_VALID_NAGIOS_VALUE : [a-zA-Z_0-9!:/\-=$&\[\].,'"()@|*%#^{}]+ ;
+BLOCK_VALID_NAGIOS_VALUE : [a-zA-Z_0-9!:/\-=$&\[\].,'"()@|*%#^{}>]+ ;
 BLOCK_NEWLINE : [\n\r]+ ;
 BLOCK_WS  :   [ \t]+ -> skip;
 BLOCK_MID_LINE_COMMENT : ';'~[\n]+ -> skip;
