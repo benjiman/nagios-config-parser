@@ -17,11 +17,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>3.8.1</version>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
             <version>4.12</version>
         </dependency>
     </dependencies>
@@ -53,6 +48,13 @@
                         <goals>
                             <goal>antlr4</goal>
                         </goals>
+                        <configuration>
+                            <libDirectory>src/main/antlr4/com/benjiweber/nagios/lexer</libDirectory>
+                            <sourceDirectory>${basedir}</sourceDirectory>
+                            <grammars>src/main/antlr4/com/benjiweber/nagios/config/Config.g4</grammars>
+                            <visitor>true</visitor>
+                            <listener>true</listener>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

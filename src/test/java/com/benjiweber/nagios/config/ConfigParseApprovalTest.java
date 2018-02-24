@@ -4,6 +4,8 @@ import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.junit.Test;
+import src.main.antlr4.com.benjiweber.nagios.config.Config;
+import src.main.antlr4.com.benjiweber.nagios.lexer.ConfigTokens;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -82,15 +84,26 @@ public class ConfigParseApprovalTest {
         );
     }
 
+    @Test public void handles_lack_of_whitespace() throws IOException {
+        assertParse(
+                "define ab{\n" +
+                        "        he lo\n" +
+                        "\two r\n" +
+                        "}",
+
+                "(config (define define (type ab) { \\n (key he) (value lo) \\n (key wo) (value r) \\n }))"
+        );
+    }
+
 
     private void assertParse(String input, String expected) throws IOException {
         ANTLRInputStream inputStream = new ANTLRInputStream(new ByteArrayInputStream((input).getBytes()));
 
-        ConfigLexer lexer = new ConfigLexer(inputStream);
+        ConfigTokens lexer = new ConfigTokens(inputStream);
 
         CommonTokenStream tokens = new CommonTokenStream(lexer);
 
-        ConfigParser parser = new ConfigParser(tokens);
+        Config parser = new Config(tokens);
 
         ParseTree tree = parser.config();
         assertEquals(expected, tree.toStringTree(parser));
