@@ -56,6 +56,18 @@ public class ConfigParseApprovalTest {
         );
     }
 
+    @Test public void allow_missing_values() throws IOException {
+        assertParse(
+                "    define xyz {\n" +
+                        "        bleh                             foo\n" +
+                        "        blah             \n" +
+                        "    }\n",
+
+                "(config (define define (type xyz) { \\n (key bleh) (value foo) \\n (key blah) \\n }) \\n)"
+        );
+    }
+
+
 
     @Test public void skips_block_singleline_comments() throws IOException {
         assertParse(
