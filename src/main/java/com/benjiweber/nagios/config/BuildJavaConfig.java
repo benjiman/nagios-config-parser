@@ -1,60 +1,49 @@
 package com.benjiweber.nagios.config;
 
+import com.benjiweber.nagios.config.model.Define;
+import com.benjiweber.nagios.config.model.DefineType;
+import com.benjiweber.nagios.config.model.KeyValue;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.*;
 import src.main.antlr4.com.benjiweber.nagios.config.Config;
+import src.main.antlr4.com.benjiweber.nagios.config.ConfigBaseVisitor;
 import src.main.antlr4.com.benjiweber.nagios.config.ConfigListener;
 import src.main.antlr4.com.benjiweber.nagios.config.ConfigVisitor;
 
-public class BuildJavaConfig<T> implements ConfigVisitor<T> {
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Stream.concat;
+
+public class BuildJavaConfig extends ConfigBaseVisitor<Stream<Define>> {
 
     @Override
-    public T visitConfig(Config.ConfigContext ctx) {
-        return null;
+    public Stream<Define> visitDefine(Config.DefineContext ctx) {
+        return Stream.of(
+            new Define(
+                    DefineType.parse(ctx.type().getText()),
+                    ctx.keyvalue().stream().map(this::toKeyValue).collect(toList())
+            )
+        );
+    }
+
+    private KeyValue toKeyValue(Config.KeyvalueContext ctx) {
+        return new KeyValue(ctx.key().getText(), ctx.value().getText());
     }
 
     @Override
-    public T visitKeyvalue(Config.KeyvalueContext ctx) {
-        return null;
+    protected Stream<Define> defaultResult() {
+        return Stream.empty();
     }
 
     @Override
-    public T visitDefine(Config.DefineContext ctx) {
-        return null;
+    protected Stream<Define> aggregateResult(Stream<Define> aggregate, Stream<Define> nextResult) {
+        return concat(aggregate, nextResult);
     }
 
-    @Override
-    public T visitType(Config.TypeContext ctx) {
-        return null;
-    }
 
-    @Override
-    public T visitKey(Config.KeyContext ctx) {
-        return null;
-    }
-
-    @Override
-    public T visitValue(Config.ValueContext ctx) {
-        return null;
-    }
-
-    @Override
-    public T visit(ParseTree parseTree) {
-        return null;
-    }
-
-    @Override
-    public T visitChildren(RuleNode ruleNode) {
-        return null;
-    }
-
-    @Override
-    public T visitTerminal(TerminalNode terminalNode) {
-        return null;
-    }
-
-    @Override
-    public T visitErrorNode(ErrorNode errorNode) {
-        return null;
-    }
 }
