@@ -9,11 +9,11 @@ import java.util.stream.Stream;
 
 public interface CommandExplanation {
     CommandExplanation[] explainers = {
-        new ScriptExecutedDirectly(),
         new Nrpe(),
         new Graphite(),
         new Aggregate(),
         new Http(),
+        new ScriptExecutedDirectly(),
         new NoClue()
     };
 
