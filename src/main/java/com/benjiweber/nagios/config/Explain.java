@@ -7,10 +7,9 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
+import static com.benjiweber.nagios.config.StreamUtils.unchecked;
 import static com.benjiweber.nagios.config.model.DefineType.service;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
@@ -87,32 +86,11 @@ public class Explain {
         return commandLine.map(cml -> cml.text().replaceAll(" .*","")).orElse("Script");
     }
 
-    interface ExceptionalFunction<T,R,E extends Exception> {
-        R apply(T t) throws E;
-    }
-
-    private static <T, R, E extends Exception> Function<T,R> unchecked(ExceptionalFunction<T, R, E> f) {
-        return t -> {
-            try {
-                return f.apply(t);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        };
-    }
-
-    private static <T,R> Function<T,Stream<R>> stream(Function<T, Optional<R>> optional) {
-        return t -> optional.apply(t).map(Stream::of).orElseGet(Stream::empty);
-    }
-
     private static Predicate<KeyValue> description = forKey("service_description");
 
     private static Predicate<KeyValue> forKey(String key) {
          return keyvalue -> Objects.equals(key, keyvalue.key());
     }
 
-    private static Predicate<KeyValue> valueEquals(String s) {
-        return keyvalue -> keyvalue.value().text().equals(s);
-    }
     
 }
