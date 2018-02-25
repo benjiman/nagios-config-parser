@@ -1,5 +1,6 @@
 package com.benjiweber.nagios.config;
 
+import com.benjiweber.nagios.config.explain.CommandExplanation;
 import com.benjiweber.nagios.config.model.*;
 
 import java.io.File;
@@ -10,6 +11,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import static com.benjiweber.nagios.config.StreamUtils.unchecked;
+import static com.benjiweber.nagios.config.explain.CommandExplanation.describeToMe;
 import static com.benjiweber.nagios.config.model.DefineType.service;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
@@ -75,7 +77,18 @@ public class Explain {
                 .map(unchecked(filename -> Files.lines(new File(filename).toPath())
                 .collect(joining("\n"))));
 
-        return fullCommand.map(c -> green("Service:") + "\n" + serviceDescription + "\n\n" + green("Executes:") + "\n" + c + commandContents.map(contents -> green("\n\n====== Start Contents of " + scriptName(commandLine) + " ======\n") + contents + green("\n====== End Contents of "+scriptName(commandLine)+" ======") ).orElse("")).orElse("Unable to find a command definition :(");
+        return fullCommand.map(c ->
+
+            green("Service:") + "\n" +
+                serviceDescription + "\n\n" +
+            green("Executes:") + "\n" +
+                c +
+                commandContents.map(contents ->
+                    green("\n\n====== Start Contents of " + scriptName(commandLine) + " ======\n") +
+                            commandLine.flatMap(cl -> describeToMe(cl, entireConfig)).orElse("Unable to read contents") +
+                    green("\n====== End Contents of "+scriptName(commandLine)+" ======") ).orElse("")
+
+        ).orElse("Unable to find a command definition :(");
     }
 
     private static String green(String s) {
