@@ -12,6 +12,7 @@ public interface CommandExplanation {
         new ScriptExecutedDirectly(),
         new Nrpe(),
         new Graphite(),
+        new Aggregate(),
         new NoClue()
     };
 

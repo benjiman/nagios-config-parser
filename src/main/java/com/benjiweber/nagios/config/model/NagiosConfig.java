@@ -6,6 +6,7 @@ import java.util.stream.Stream;
 import static java.util.stream.Collectors.groupingBy;
 
 public class NagiosConfig {
+
     private final Map<DefineType, List<Define>> byType;
     private final List<Define> defines;
 
