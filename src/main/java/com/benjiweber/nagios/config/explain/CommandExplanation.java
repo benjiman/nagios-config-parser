@@ -11,6 +11,7 @@ public interface CommandExplanation {
     CommandExplanation[] explainers = {
         new ScriptExecutedDirectly(),
         new Nrpe(),
+        new Graphite(),
         new NoClue()
     };
 
