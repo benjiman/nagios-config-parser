@@ -1,9 +1,8 @@
 package com.benjiweber.nagios.config;
 
-import com.benjiweber.nagios.config.model.Define;
+import com.benjiweber.nagios.config.model.NagiosConfig;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.ConsoleErrorListener;
 import org.antlr.v4.runtime.tree.*;
 import src.main.antlr4.com.benjiweber.nagios.config.Config;
 import src.main.antlr4.com.benjiweber.nagios.lexer.ConfigTokens;
@@ -12,13 +11,12 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
-public class NagiosConfig {
+public class NagiosConfigParser {
     
     public static void main(String... args) throws Exception {
 
@@ -28,13 +26,13 @@ public class NagiosConfig {
 
     }
 
-    public static List<Define> parse(File file)  {
+    public static NagiosConfig parse(File file)  {
         return file.isDirectory()
-            ? Stream.of(
+            ? new NagiosConfig(Stream.of(
                 file.listFiles((File dir, String name) -> name.endsWith(".cfg") || file.isDirectory()))
                     .flatMap(ignoringUnparsableFiles((File f) -> parse(f).stream()))
-                    .collect(toList())
-            : ignoringUnparsableFiles(__ -> parseFile(file).stream()).apply(file).collect(toList());
+                    .collect(toList()))
+            : new NagiosConfig(ignoringUnparsableFiles(__ -> parseFile(file).stream()).apply(file).collect(toList()));
 
     }
 
@@ -53,7 +51,7 @@ public class NagiosConfig {
     }
 
 
-    public static List<Define> parseFile(File file) throws InvalidNagiosConfigException {
+    public static NagiosConfig parseFile(File file) throws InvalidNagiosConfigException {
         try {
             ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(file));
             return parse(input);
@@ -63,7 +61,7 @@ public class NagiosConfig {
 
     }
 
-    public static List<Define> parse(ANTLRInputStream input) throws InvalidNagiosConfigException {
+    public static NagiosConfig parse(ANTLRInputStream input) throws InvalidNagiosConfigException {
         ConfigTokens lexer = new ConfigTokens(input);
         lexer.removeErrorListeners();
 
@@ -78,10 +76,10 @@ public class NagiosConfig {
             throw new InvalidNagiosConfigException(parser.getNumberOfSyntaxErrors() + " syntax errors.");
         }
 
-        return tree.accept(new BuildJavaConfig()).collect(toList());
+        return new NagiosConfig(tree.accept(new BuildJavaConfig()).collect(toList()));
     }
 
-    public static List<Define> parse(String content) throws InvalidNagiosConfigException {
+    public static NagiosConfig parse(String content) throws InvalidNagiosConfigException {
         try {
             return parse(new ANTLRInputStream(new ByteArrayInputStream((content.getBytes()))));
         } catch (IOException e) {

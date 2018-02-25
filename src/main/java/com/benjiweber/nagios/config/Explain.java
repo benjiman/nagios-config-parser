@@ -9,12 +9,11 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.benjiweber.nagios.config.model.DefineType.service;
 import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
 
 public class Explain {
 
@@ -22,13 +21,13 @@ public class Explain {
         String serviceDescription = args[0];
         String configLocation = args[1];
 
-        List<Define> config = NagiosConfig.parse(new File(configLocation));
+        NagiosConfig config = NagiosConfigParser.parse(new File(configLocation));
 
         List<Define> matches = config
+                .ofType(service)
                 .stream()
-                .filter(define -> define.type() == service)
-                .filter(define -> define.config().stream().anyMatch(description.and(keyvalue -> keyvalue.value().text().toLowerCase().contains(serviceDescription.toLowerCase()))))
-                .collect(Collectors.toList());
+                .filter(define -> searchMatch(define.get("service_description"), serviceDescription))
+                .collect(toList());
 
         if (matches.size() > 1) {
             System.out.println(
@@ -44,27 +43,30 @@ public class Explain {
 
     }
 
-    private static String describe(Define define, List<Define> entireConfig) {
-        String serviceDescription = define.config().stream()
-                .filter(description)
-                .map(keyvalue -> keyvalue.value().text())
-                .findFirst().orElse("no description");
+    private static boolean searchMatch(Optional<Value> candidateValue, String b) {
+        return candidateValue.map(a -> a.text().toLowerCase().contains(b.toLowerCase())).orElse(false);
+    }
+
+    private static String describe(Define define, NagiosConfig   entireConfig) {
+        String serviceDescription = define
+                .get("service_description")
+                .map(value -> value.text())
+                .orElse("no description");
 
         Optional<CheckCommand> command = define
-            .config()
-            .stream()
-            .filter(forKey("check_command"))
-            .flatMap(stream(keyValue -> keyValue.value().when(CheckCommand.class, i->i)))
-            .findFirst();
+            .get("check_command")
+            .flatMap(kv -> kv.tryCast(CheckCommand.class));
 
         Optional<Define> commandDefinition = command.flatMap(
-            cmd -> entireConfig.stream()
-                .filter(def -> def.type() == DefineType.command)
-                .filter(def -> def.config().stream().anyMatch(forKey("command_name").and(valueEquals(cmd.command()))))
+            cmd -> entireConfig
+                .ofType(DefineType.command)
+                .stream()
+                .filter(def -> searchMatch(def.get("command_name"), cmd.command()))
                 .findAny()
         );
 
-        Optional<Value> commandLine = commandDefinition.flatMap(c -> c.config().stream().filter(forKey("command_line")).map(KeyValue::value).findAny());
+        Optional<Value> commandLine = commandDefinition
+                .flatMap(c -> c.get("command_line"));
 
         Optional<String> fullCommand = command.flatMap(cmd -> commandLine.map(line -> cmd.interpolate(line.text())));
 

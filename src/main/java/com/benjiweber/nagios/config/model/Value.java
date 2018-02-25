@@ -19,4 +19,10 @@ public interface Value {
             ? Optional.of(f.apply((T)this))
             : Optional.empty();
     }
+
+    default <U> Optional<U> tryCast(Class<U> cls) {
+        return getClass().isAssignableFrom(cls)
+                ? Optional.of((U)this)
+                : Optional.empty();
+    }
 }
