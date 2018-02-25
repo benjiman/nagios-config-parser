@@ -1,16 +1,13 @@
 package com.benjiweber.nagios.config;
 
-import com.benjiweber.nagios.config.explain.CommandExplanation;
 import com.benjiweber.nagios.config.model.*;
 
 import java.io.File;
-import java.nio.file.Files;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import static com.benjiweber.nagios.config.StreamUtils.unchecked;
 import static com.benjiweber.nagios.config.explain.CommandExplanation.describeToMe;
 import static com.benjiweber.nagios.config.model.DefineType.service;
 import static java.util.stream.Collectors.joining;
@@ -19,6 +16,11 @@ import static java.util.stream.Collectors.toList;
 public class Explain {
 
     public static void main(String... args) {
+        if (args.length < 1) {
+            System.err.println("Usage: \"<search_terms>\" [<nagios_config_location>]");
+            System.exit(1);
+        }
+
         String serviceDescription = args[0];
         String configLocation = args.length < 2 ? Config.CONFIG_DIR : args[1];
 

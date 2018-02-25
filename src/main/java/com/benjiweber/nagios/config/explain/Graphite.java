@@ -25,7 +25,7 @@ public class Graphite implements CommandExplanation {
 
         return Optional.of(
             "This check is comparing the current value of a graphite query against some thresholds\n\n" +
-            "Take a look at the graph at " + Config.GRAPHITE_PREFIX +"/render/?width=588&height=310&_salt=1519563694.074&target=" + metricName
+            "Take a look at the graph at " + Config.GRAPHITE_PREFIX +"render/?width=588&height=310&_salt=1519563694.074&target=" + metricName
         );
     }
 }
