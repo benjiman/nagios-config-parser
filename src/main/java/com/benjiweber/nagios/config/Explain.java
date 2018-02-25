@@ -30,7 +30,9 @@ public class Explain {
                 .filter(define -> searchMatch(define.get("service_description"), serviceDescription))
                 .collect(toList());
 
-        if (matches.size() > 1) {
+        if (matches.isEmpty()) {
+            System.out.println("No matches found");
+        } else if (matches.size() > 1) {
             System.out.println(
                 green("Did you mean one of: \n") +
                 matches.stream()
@@ -71,22 +73,14 @@ public class Explain {
 
         Optional<String> fullCommand = command.flatMap(cmd -> commandLine.map(line -> cmd.interpolate(line.text())));
 
-        Optional<String> commandContents = commandLine
-                .map(Value::text)
-                .map(cmd -> cmd.split(" ")[0])
-                .map(unchecked(filename -> Files.lines(new File(filename).toPath())
-                .collect(joining("\n"))));
 
         return fullCommand.map(c ->
 
             green("Service:") + "\n" +
                 serviceDescription + "\n\n" +
             green("Executes:") + "\n" +
-                c +
-                commandContents.map(contents ->
-                    green("\n\n====== Start Contents of " + scriptName(commandLine) + " ======\n") +
-                            commandLine.flatMap(cl -> describeToMe(cl, entireConfig)).orElse("Unable to read contents") +
-                    green("\n====== End Contents of "+scriptName(commandLine)+" ======") ).orElse("")
+                c + "\n\n" +
+                commandLine.flatMap(cl -> describeToMe(cl, define, entireConfig)).orElse("Unable to read contents")
 
         ).orElse("Unable to find a command definition :(");
     }

@@ -1,9 +1,6 @@
 package com.benjiweber.nagios.config.model;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.groupingBy;
@@ -51,7 +48,10 @@ public class NagiosConfig {
     }
 
     public NagiosConfig ofType(DefineType type) {
-        return new NagiosConfig(byType.get(type), mapOf(type, byType.get(type)));
+        List<Define> configSubset = byType.getOrDefault(type, Collections.emptyList());
+        return configSubset.isEmpty()
+            ? new NagiosConfig(configSubset, Collections.emptyMap())
+            : new NagiosConfig(configSubset, mapOf(type, configSubset));
     }
 
     private static <K,V> Map<K,V> mapOf(K key, V value) {

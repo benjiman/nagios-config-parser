@@ -56,4 +56,8 @@ public class Define {
     public Optional<Value> get(String key) {
         return Optional.ofNullable(keyed.get(key));
     }
+
+    public Optional<String> getAsText(String key) {
+        return get(key).map(Value::text);
+    }
 }
