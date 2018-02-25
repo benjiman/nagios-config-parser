@@ -20,7 +20,7 @@ public class Explain {
 
     public static void main(String... args) {
         String serviceDescription = args[0];
-        String configLocation = args[1];
+        String configLocation = args.length < 2 ? Config.CONFIG_DIR : args[1];
 
         NagiosConfig config = NagiosConfigParser.parse(new File(configLocation));
 

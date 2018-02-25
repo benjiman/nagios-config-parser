@@ -13,6 +13,7 @@ public interface CommandExplanation {
         new Nrpe(),
         new Graphite(),
         new Aggregate(),
+        new Http(),
         new NoClue()
     };
 
